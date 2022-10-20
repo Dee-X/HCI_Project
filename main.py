@@ -2,11 +2,13 @@ import pandas as pd
 import probability
 from sklearn.model_selection import train_test_split
 
+str_columns = ['x2', 'x4', 'x6', 'x7', 'x8', 'x9', 'x10', 'x14', 'Y']
+
 
 # Read csv and filter out rows with '?'
 def read_csv(name):
     unique = {}
-    data = pd.read_csv(name)
+    data = pd.read_csv(name, skipinitialspace=True)
     df = pd.DataFrame(data)
     df.columns = [
         "x1",
@@ -30,10 +32,13 @@ def read_csv(name):
         if column == 'Y':
             break
         else:
-            df = df[df[column] != ' ?']
+            df = df[df[column] != '?']
             unique[column] = df[column].unique()
 
-    print(df)
+    # for column in str_columns:
+    #     df[column].str.strip()
+
+    # print(df)
 
     # for key, values in unique.items():
     #     print(key, ': ', values)
