@@ -10,23 +10,7 @@ def read_csv(name):
     unique = {}
     data = pd.read_csv(name, skipinitialspace=True)
     df = pd.DataFrame(data)
-    df.columns = [
-        "x1",
-        "x2",
-        "x3",
-        "x4",
-        "x5",
-        "x6",
-        "x7",
-        "x8",
-        "x9",
-        "x10",
-        "x11",
-        "x12",
-        "x13",
-        "x14",
-        "Y"
-    ]
+    df.columns = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12", "x13", "x14", "Y"]
 
     for column in df:
         if column == 'Y':
@@ -34,14 +18,6 @@ def read_csv(name):
         else:
             df = df[df[column] != '?']
             unique[column] = df[column].unique()
-
-    # for column in str_columns:
-    #     df[column].str.strip()
-
-    # print(df)
-
-    # for key, values in unique.items():
-    #     print(key, ': ', values)
 
     # Split data into two different datasets
     train, test = train_test_split(df, test_size=0.3)
