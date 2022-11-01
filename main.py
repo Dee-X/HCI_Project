@@ -22,8 +22,8 @@ def read_csv(name):
     # Split data into two different datasets
     train, test = train_test_split(df, test_size=0.3)
 
-    do_mle(train)
-    test_design(test)
+    prob_above50, prob_below50 = do_mle(train)
+    test_design(test, prob_above50, prob_below50)
 
 
 if __name__ == '__main__':
