@@ -2,15 +2,12 @@ import pandas as pd
 from probability import do_mle, test_design
 from sklearn.model_selection import train_test_split
 
-# str_columns = ['x2', 'x4', 'x6', 'x7', 'x8', 'x9', 'x10', 'x14', 'Y']
-
 
 # Read csv and filter out rows with '?'
 def read_csv(name):
     unique = {}
     data = pd.read_csv(name, skipinitialspace=True)
     df = pd.DataFrame(data)
-    # df.columns = ["x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9", "x10", "x11", "x12", "x13", "x14", "Y"]
 
     for column in df:
         if column == 'Y':
@@ -23,6 +20,7 @@ def read_csv(name):
     train, test = train_test_split(df, test_size=0.3)
 
     prob_above50, prob_below50 = do_mle(train)
+
     test_design(test, prob_above50, prob_below50)
 
 
