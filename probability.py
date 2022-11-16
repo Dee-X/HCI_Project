@@ -2,7 +2,7 @@ import pandas as pd
 import math
 
 
-def do_mle(data):
+def do_mle(data, codes):
     counts = {}
     counts_above50 = {}
     counts_below50 = {}
@@ -14,8 +14,10 @@ def do_mle(data):
     for column in data:
         counts[column] = data[column].value_counts()
 
-    df_above50 = data[data['Y'] == '>50K.']  # C(>50K)
-    df_below50 = data[data['Y'] == '<=50K.']  # C(<=50K)
+    df_above50 = data[data['Y'] == codes['Y']['>50K.']]  # C(>50K)
+    # df_above50 = data[data['Y'] == '>50K.']  # C(>50K)
+    df_below50 = data[data['Y'] == codes['Y']['<=50K.']]  # C(<=50K)
+    # df_below50 = data[data['Y'] == '<=50K.']  # C(<=50K)
 
     above_full_count = len(df_above50.index)
     below_full_count = len(df_below50.index)
@@ -59,7 +61,7 @@ def do_mle(data):
     return prob_above50, prob_below50
 
 
-def test_design(data, prob_above50, prob_below50):
+def test_design(data, prob_above50, prob_below50, codes):
     data_length = len(data.index)
     assigned_list = []
 
@@ -86,9 +88,9 @@ def test_design(data, prob_above50, prob_below50):
         below_entropy = below_entropy * (-1 / data_length)
 
         if below_entropy > above_entropy:
-            assigned_list.append('>50K.')
+            assigned_list.append(codes['Y']['>50K.'])
         else:
-            assigned_list.append('<=50K.')
+            assigned_list.append(codes['Y']['<=50K.'])
 
     data['Assigned'] = assigned_list
 
