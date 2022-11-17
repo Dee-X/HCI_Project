@@ -7,10 +7,10 @@ Members:
 ===========================================
 Requirements:
  - Python
- - math
- - pandas
- - sk_learn
- - numpy
+ - math (standard library)
+ - pandas (`pip install pandas`)
+ - sk_learn (`pip install -U scikit-learn`)
+ - numpy (`pip install numpy`)
  
 ===========================================
 How to use application:
