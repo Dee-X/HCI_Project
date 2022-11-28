@@ -15,13 +15,7 @@ def do_mle(data, codes):
         counts[column] = data[column].value_counts()
 
     df_above50 = data[data['Y'] == codes['Y']['>50K.']]  # C(>50K)
-    # df_above50 = data[data['Y'] == '>50K.']  # C(>50K)
     df_below50 = data[data['Y'] == codes['Y']['<=50K.']]  # C(<=50K)
-    # df_below50 = data[data['Y'] == '<=50K.']  # C(<=50K)
-
-    above_full_count = len(df_above50.index)
-    below_full_count = len(df_below50.index)
-
     for column in df_above50:
         counts_above50[column] = df_above50[column].value_counts()
 
@@ -35,6 +29,7 @@ def do_mle(data, codes):
         inner_ret_above50 = {}
         inner_ret_below50 = {}
         for val, cnt in counts[column].items():
+            df_temp = data[data[column] == val]
 
             # MLE: C(val, >50k)
             above_cnt = counts_above50[column].get(val)
@@ -48,12 +43,14 @@ def do_mle(data, codes):
 
             # MLE: C(val, >50k)/ C(val)
             # above_prob = above_cnt / above_full_count
-            above_prob = above_cnt / data_length
+            # above_prob = above_cnt / data_length
+            above_prob = above_cnt / len(df_temp)
             inner_ret_above50[val] = above_prob
 
             # MLE: C(val, <=50k)/ C(val)
             # below_prob = below_cnt / below_full_count
-            below_prob = below_cnt / data_length
+            # below_prob = below_cnt / data_length
+            below_prob = below_cnt / len(df_temp)
             inner_ret_below50[val] = below_prob
         prob_above50[column] = inner_ret_above50
         prob_below50[column] = inner_ret_below50
@@ -80,12 +77,12 @@ def test_design(data, prob_above50, prob_below50, codes):
 
             # Corpus Cross Entropy: -1/n*SUM(log_2(p(x)))
             if above_prob != 0:
-                above_entropy += math.log(above_prob, 2)
+                above_entropy += above_prob*math.log(above_prob, 2)
             if below_prob != 0:
-                below_entropy += math.log(below_prob, 2)
+                below_entropy += below_prob*math.log(below_prob, 2)
         # break
-        above_entropy = above_entropy * (-1 / data_length)
-        below_entropy = below_entropy * (-1 / data_length)
+        above_entropy = above_entropy * (-1 / 14)
+        below_entropy = below_entropy * (-1 / 14)
 
         if below_entropy > above_entropy:
             assigned_list.append(codes['Y']['>50K.'])
@@ -94,7 +91,9 @@ def test_design(data, prob_above50, prob_below50, codes):
 
     data['Assigned'] = assigned_list
 
-    find_accuracy(data)
+    acc = find_accuracy(data)
+    
+    return acc
 
 
 def find_accuracy(data):
@@ -112,6 +111,6 @@ def find_accuracy(data):
 
         sum_l += l
 
-    acc = (1/data_length) * sum_l
+    acc = ((1/data_length) * sum_l) * 100
 
-    print("\n\nAccuracy of Model: ", acc)
+    return acc
